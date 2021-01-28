@@ -220,7 +220,7 @@ const schema = new GraphQLSchema({
                     username: { type: new GraphQLNonNull(GraphQLString) }
                 },
                 type: userType,
-                resolve: (parent, args) => updateUser(args._id, args.username)
+                resolve: (parent, args) => updateUser(args)
             },
             getbackUser: {
                 args: {

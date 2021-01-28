@@ -11,11 +11,13 @@ module.exports =  (ids) => {
         const params = {
             TableName: process.env.USER_TABLE, 
             Key: {dummy,_id},
-            UpdateExpression: "set #position = :position", // 어떤 걸 수정할지 정해줘야합니다.
+            UpdateExpression: "set #position = :position, #status = :status", // 어떤 걸 수정할지 정해줘야합니다.
             ExpressionAttributeNames: {
+                '#status':"status",
                 '#position': "position"
             },
             ExpressionAttributeValues: {  // 수정할 것의 값을 정해줘야합니다.
+                ":status":"대기중",
                 ":position": "주문자"
             }
         };

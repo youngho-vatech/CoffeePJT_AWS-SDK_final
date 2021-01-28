@@ -801,13 +801,15 @@ module.exports = ids => {
         dummy,
         _id
       },
-      UpdateExpression: "set #position = :position",
+      UpdateExpression: "set #position = :position, #status = :status",
       // 어떤 걸 수정할지 정해줘야합니다.
       ExpressionAttributeNames: {
+        '#status': "status",
         '#position': "position"
       },
       ExpressionAttributeValues: {
         // 수정할 것의 값을 정해줘야합니다.
+        ":status": "대기중",
         ":position": "주문자"
       }
     };
@@ -832,8 +834,19 @@ const AWS = __webpack_require__(/*! aws-sdk */ "aws-sdk");
 const dynamoDb = new AWS.DynamoDB.DocumentClient();
 
 module.exports = async () => {
-  const people = await dynamoDb.scan({
-    TableName: process.env.USER_TABLE
+  const people = await dynamoDb.query({
+    TableName: process.env.USER_TABLE,
+    KeyConditionExpression: "dummy = :dummy",
+    FilterExpression: "#status = :status and #position <> :position",
+    ExpressionAttributeNames: {
+      '#status': "status",
+      '#position': "position"
+    },
+    ExpressionAttributeValues: {
+      ":dummy": "유저",
+      ":status": "대기중",
+      ":position": "휴가자"
+    }
   }).promise().then(r => r.Items);
   const number = [0, 0, 0, 0];
   console.log(people);
@@ -1397,10 +1410,10 @@ const dynamoDb = new AWS.DynamoDB.DocumentClient();
 
 const uuid = __webpack_require__(/*! uuid */ "uuid");
 
-module.exports = ids => {
+module.exports = async ids => {
   for (let i = 0; i < ids.length; i++) {
-    const _id = ids[i];
-    const dummy = "유저";
+    let _id = ids[i];
+    let dummy = "유저";
     const params = {
       TableName: process.env.USER_TABLE,
       Key: {
@@ -1417,7 +1430,43 @@ module.exports = ids => {
         ":position": "휴가자"
       }
     };
-    dynamoDb.update(params).promise().then(result => params.Item);
+    await dynamoDb.update(params).promise().then(result => params.Item);
+    const userparams = {
+      TableName: process.env.USER_TABLE,
+      Key: {
+        dummy,
+        _id
+      }
+    };
+    const result = await dynamoDb.get(userparams).promise().then(r => r.Item);
+
+    if (result.status == "주문완료") {
+      const updated = await dynamoDb.query({
+        TableName: process.env.ORDER_TABLE,
+        KeyConditionExpression: "dummy = :dummy",
+        FilterExpression: "#username = :username",
+        ExpressionAttributeNames: {
+          '#username': "username"
+        },
+        ExpressionAttributeValues: {
+          ":dummy": "주문",
+          ":username": result.username
+        }
+      }).promise().then(r => r.Items);
+
+      if (updated) {
+        _id = updated[0]._id;
+        dummy = "주문";
+        const orderparams = {
+          TableName: process.env.ORDER_TABLE,
+          Key: {
+            dummy,
+            _id
+          }
+        };
+        await dynamoDb.delete(orderparams).promise().then(r => r.Item);
+      }
+    }
   }
 
   return "휴가자 등록이 완료 되었습니다.";
@@ -1439,8 +1488,19 @@ const dynamoDb = new AWS.DynamoDB.DocumentClient();
 
 const uuid = __webpack_require__(/*! uuid */ "uuid");
 
-module.exports = async (_id, username) => {
-  const dummy = "유저";
+module.exports = async data => {
+  let dummy = "유저";
+  let _id = data._id;
+  let username = data.username;
+  const personparam = {
+    TableName: process.env.USER_TABLE,
+    Key: {
+      dummy,
+      _id
+    }
+  };
+  const person = await dynamoDb.get(personparam).promise();
+  console.log(person.Item.username);
   const params = {
     TableName: process.env.USER_TABLE,
     Key: {
@@ -1455,6 +1515,44 @@ module.exports = async (_id, username) => {
     }
   };
   const result = await dynamoDb.update(params).promise().then(result => params.Item);
+
+  if (person.Item.status == "주문완료") {
+    const updated = await dynamoDb.query({
+      TableName: process.env.ORDER_TABLE,
+      KeyConditionExpression: "dummy = :dummy",
+      FilterExpression: "#username = :username",
+      ExpressionAttributeNames: {
+        '#username': "username"
+      },
+      ExpressionAttributeValues: {
+        ":dummy": "주문",
+        ":username": person.Item.username
+      }
+    }).promise().then(r => r.Items);
+    console.log(updated);
+    _id = updated[0]._id;
+    console.log(_id);
+    dummy = "주문";
+    const orderparams = {
+      TableName: process.env.ORDER_TABLE,
+      Key: {
+        dummy,
+        _id
+      },
+      UpdateExpression: "set #username = :username",
+      // 어떤 걸 수정할지 정해줘야합니다.
+      ExpressionAttributeNames: {
+        '#username': "username"
+      },
+      ExpressionAttributeValues: {
+        // 수정할 것의 값을 정해줘야합니다.
+        ":username": username
+      }
+    };
+    const oresult = await dynamoDb.update(orderparams).promise().then(result => orderparams.Item);
+    console.log(oresult);
+  }
+
   return result;
 };
 
@@ -1807,7 +1905,7 @@ const schema = new GraphQLSchema({
           }
         },
         type: userType,
-        resolve: (parent, args) => updateUser(args._id, args.username)
+        resolve: (parent, args) => updateUser(args)
       },
       getbackUser: {
         args: {
