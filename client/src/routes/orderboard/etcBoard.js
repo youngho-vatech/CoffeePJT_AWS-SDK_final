@@ -12,7 +12,7 @@ import {Column, Row} from "simple-flexbox";
 import {useQuery} from "@apollo/react-hooks";
 import {TaskQuery} from "../../graphql/query";
 import CreateButton from "./useBoard";
-import GiveupButton from "../../components/button/GiveupButton";
+import Emoji from "../../components/alert/emoji";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -29,15 +29,19 @@ const useStyles = makeStyles((theme) => ({
     },
     background: {
         backgroundColor: 'rgba(246,244,244,0.9)',
-        padding: "45px 45px 45px 45px"
+        padding: "45px 45px 45px 45px",
+        marginTop: "20px"
     },
     border: {
         backgroundColor: "whitesmoke",
         fontSize: '15px !important',
         fontFamily: "Do Hyeon",
         fontWeight: "600",
+        textAlign: "center",
         border: `5px solid #624444`,
         borderRadius: 5,
+        width: "100%",
+        padding: "10px 10px 10px 10px"
     },
     itemTitle: {
         ...theme.typography.itemTitle,
@@ -58,7 +62,6 @@ const useStyles = makeStyles((theme) => ({
 export default function EtcBoard() {
     const classes = useStyles();
     const [contents, setContents] = useState('');
-    const [status, setStatus] = useState();
 
     const {data} = useQuery(TaskQuery);
     useEffect(() => {
@@ -72,15 +75,17 @@ export default function EtcBoard() {
         <Column className={classes.background}>
             <Row
                 horizontal='space-between'
-                className={classes.lastRow}
                 breakpoints={{1024: 'column'}}
             >
-                <table className={classes.border}>
 
-                    {contents && contents.map((content) => (
-                        <td><span className={classes.itemTitle}>👏  오늘은 {content.creater}님이 {content.title} 기념으로 커피 쏩니다! 👏</span>
-                        </td>))}
-                </table>
+
+                {contents && contents.map((content) => (
+                    <span
+                        key={content} className={classes.border}><Emoji
+                        symbol="👏"/> 오늘은 {content.creater}님이 {content.title} 기념으로 커피 쏩니다! <Emoji
+                        symbol="👏"/></span>
+                ))}
+
 
             </Row>
 
@@ -187,9 +192,6 @@ export default function EtcBoard() {
                                 </Card>
                             </Paper>
                         </Grid>
-                        {status === "대기중" && (
-                            <GiveupButton userid={localStorage.getItem("myData")}/>
-                        )}
 
                     </Grid>
                 </div>

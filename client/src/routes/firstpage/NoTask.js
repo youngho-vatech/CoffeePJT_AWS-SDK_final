@@ -11,12 +11,6 @@ import Button from "@material-ui/core/Button";
 
 const useStyles = createUseStyles((theme) => ({
 
-        focused: {
-            textAlign: "center",
-            "& $notchedOutline": {
-                borderColor: "yellow"
-            }
-        },
         loginwrap: {
             color: "white",
             fontWeight: "lighter",

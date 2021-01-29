@@ -4,9 +4,9 @@ import {createUseStyles, useTheme} from 'react-jss';
 import CardComponent from 'components/cards/CardComponent';
 import {useQuery} from "@apollo/react-hooks";
 import {TaskQuery} from "../../graphql/query";
-import TaskDeleteButton from "../../components/button/TaskDeleteButton";
 import VacationBoard from "../firstpage/VacationBoard";
 import UpdateTask from "../../components/dialog/UpdateTask";
+import Emoji from "../../components/alert/emoji";
 
 const useStyles = createUseStyles((theme) => ({
     root: {marginTop: -160},
@@ -36,14 +36,12 @@ function RewritePage(props) {
         if (data) {
             setContents(data.tasks);
         }
-    })
+    }, [data])
 
     return (
         <CardComponent
             containerStyles={props.containerStyles}
             className={classes.root}
-            title='📋 주문 생성 및 휴가자 관리 📋'
-            subtitle='(예시) 사유를 적어주시면 👏오늘은 OOO님이 @@ 기념으로 커피 삽니다!👏 로 주문자 화면에 보여집니다!'
 
             items={[
                 <Row>
@@ -63,11 +61,12 @@ function RewritePage(props) {
                                 {contents && contents.map((content) => (
 
 
-                                    <tbody>
-                                    <td><span className={classes.itemTitle}>
-                                        👏오늘은 {content.creater}님이 {content.title} 기념으로 커피 삽니다!👏</span></td>
-                                    <td><UpdateTask id={content._id} title={content.title}/></td>
-
+                                    <tbody key={content}>
+                                    <tr>
+                                        <td><span className={classes.itemTitle}>
+                                        <Emoji symbol="👏"/>오늘은 {content.creater}님이 {content.title} 기념으로 커피 삽니다!<Emoji symbol="👏"/></span></td>
+                                        <td><UpdateTask id={content._id} title={content.title}/></td>
+                                    </tr>
 
                                     </tbody>
 

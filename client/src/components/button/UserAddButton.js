@@ -6,7 +6,7 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import {DUpdateUser, UserAdd} from "../../graphql/useMutation";
+import {UserAdd} from "../../graphql/useMutation";
 
 export default function UserAddButton(username) {
     const [open, setOpen] = React.useState(false);

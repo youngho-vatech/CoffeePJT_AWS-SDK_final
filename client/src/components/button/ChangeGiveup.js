@@ -22,16 +22,14 @@ function ChangeGiveupButton(userid) {
     return (
         <>
 
-            <form action="#">
 
-                <Button variant="contained" type='submit'
-                        onClick={ChangeGiveup(userid)}
-                        className={classes.button}
-                        value="↳주문 취소">
-                    주문을 포기하셨습니다.<br/>재주문하시려면 클릭해주세요.
-                </Button>
+            <Button variant="contained" type='submit'
+                    onClick={ChangeGiveup(userid)}
+                    className={classes.button}
+                    value="↳주문 취소">
+                주문을 포기하셨습니다.<br/>재주문하시려면 클릭해주세요.
+            </Button>
 
-            </form>
 
         </>
     );

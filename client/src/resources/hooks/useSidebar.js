@@ -28,7 +28,7 @@ export const useSidebar = ({isCollapsible, item, items = []} = {}) => {
         if (isActive && !isExpanded) {
             return setIsExpanded(true);
         }
-    }, [currentItem]);
+    }, [currentItem,isActive,isExpanded]);
 
     const onItemClick = () => {
         if (!isCollapsible) {

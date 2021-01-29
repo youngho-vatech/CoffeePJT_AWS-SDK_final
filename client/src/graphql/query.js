@@ -17,6 +17,7 @@ export const MeQuery = gql`
             username
             position
             status
+            _id
         }
     }
 

@@ -23,7 +23,7 @@ function GiveupButton(userid) {
     return (
         <>
 
-            <form action="#">
+
 
                 <Button variant="contained" type='submit'
                         onClick={Giveup(userid)}
@@ -32,7 +32,7 @@ function GiveupButton(userid) {
                     주문하지 않겠습니다.
                 </Button>
 
-            </form>
+
 
         </>
     );

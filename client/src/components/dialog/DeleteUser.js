@@ -1,16 +1,14 @@
 import React, {useState} from 'react';
 import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import {DSelectUser, DUpdateUser} from "../../graphql/useMutation";
+import {DSelectUser} from "../../graphql/useMutation";
 
 export default function DeleteUserDialog(username) {
     const [open, setOpen] = useState(false);
-    const [content, setContent] = useState('');
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -37,7 +35,7 @@ export default function DeleteUserDialog(username) {
                         취소
                     </Button>
                     <Button
-                            onClick={DSelectUser(username, content, setOpen)} color="primary">
+                            onClick={DSelectUser(username, setOpen)} color="primary">
                         삭제
                     </Button>
                 </DialogActions>

@@ -6,7 +6,6 @@ import {convertlinksToUrl} from 'resources/utilities';
 import LogoComponent from './LogoComponent';
 import Menu from './MenuComponent';
 import MenuItem from './MenuItemComponent';
-import {useAuthToken} from '../../routes/firstpage/authToken';
 import {useQuery} from '@apollo/react-hooks';
 import {MeQuery} from "../../graphql/query";
 
@@ -29,7 +28,7 @@ const handleClick = () => {
 
 
 function SidebarComponent() {
-    const [_, removeAuthToken] = useAuthToken();
+    // const [_, removeAuthToken] = useAuthToken();
 
     const {push} = useHistory();
     const theme = useTheme();
@@ -45,6 +44,7 @@ function SidebarComponent() {
         },
 
     });
+
 
     useEffect(() => {
         if (data) {
@@ -74,7 +74,7 @@ function SidebarComponent() {
                 onClick={() => onClick(LINKS.orderboard)}
             />}
 
-            {user == "결제자" && <MenuItem
+            {user === "결제자" && <MenuItem
                 id={LINKS.pay}
                 title='결제하기'
                 onClick={() => onClick(LINKS.pay)}
@@ -82,14 +82,14 @@ function SidebarComponent() {
 
             <div className={classes.separator}></div>
 
-            {user == "결제자" &&
+            {user === "결제자" &&
             <MenuItem
                 id={LINKS.settings}
                 title='팀원 관리'
                 onClick={() => onClick(LINKS.settings)}
             />}
 
-            {user == "결제자" && <MenuItem
+            {user === "결제자" && <MenuItem
                 id={LINKS.create}
                 title='마이페이지'
                 onClick={() => onClick(LINKS.reset)}

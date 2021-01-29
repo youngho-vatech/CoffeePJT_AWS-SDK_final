@@ -60,7 +60,7 @@ export default function TransferList() {
         if (order) {
             setLeft(order.includedOrdermen);
         }
-    });
+    },[user,order]);
 
     const leftChecked = intersection(checked, left);
     const rightChecked = intersection(checked, right);

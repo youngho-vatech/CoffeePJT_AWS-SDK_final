@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import PropTypes from 'prop-types';
 import {makeStyles, withStyles} from '@material-ui/core/styles';
 import clsx from 'clsx';
@@ -8,10 +8,8 @@ import StepLabel from '@material-ui/core/StepLabel';
 import Check from '@material-ui/icons/Check';
 import SettingsIcon from '@material-ui/icons/Settings';
 import GroupAddIcon from '@material-ui/icons/GroupAdd';
-import AssignmentTurnedInTwoToneIcon from '@material-ui/icons/AssignmentTurnedInTwoTone';
 import StepConnector from '@material-ui/core/StepConnector';
 import Button from '@material-ui/core/Button';
-import Typography from '@material-ui/core/Typography';
 import Second from "./SecondStep";
 import First from "./FirstStep";
 
@@ -154,7 +152,27 @@ const useStyles = makeStyles((theme) => ({
         width: "100px",
         height: "100px",
         color: "white",
-        backgroundColor: "#254143",
+        backgroundColor: "#7d997a",
+        border: "solid 6px #254143",
+        borderRadius: "100%",
+        transition: "all .2s linear",
+        "&:hover": {
+            backgroundColor: 'rgb(12,12,12,0.8)',
+            color: "white"
+        }
+
+    },
+    bbutton: {
+        marginLeft: "70px",
+        marginTop: "-200px",
+        margin: "none",
+        cursor: "pointer",
+        position: "relative",
+        display: "block",
+        width: "100px",
+        height: "100px",
+        color: "white",
+        backgroundColor: "#7d997a",
         border: "solid 6px #254143",
         borderRadius: "100%",
         transition: "all .2s linear",
@@ -212,7 +230,7 @@ function getStepContent(step) {
 
 export default function CustomizedSteppers() {
     const classes = useStyles();
-    const [activeStep, setActiveStep] = React.useState(0);
+    const [activeStep, setActiveStep] = useState(0);
     const steps = getSteps();
 
 
@@ -238,31 +256,8 @@ export default function CustomizedSteppers() {
         <div className={classes.root}>
 
 
-            <Stepper alternativeLabel activeStep={activeStep} connector={<ColorlibConnector/>}
-                     className={classes.background}>
+            <Second/>
 
-                <Step>
-
-                    <StepLabel StepIconComponent={AssignmentTurnedInTwoToneIcon}
-                               completed="true"
-                               active="true"
-                               error="false"
-                    >Completed</StepLabel>
-
-                </Step>
-
-            </Stepper>
-            <div>
-                <div>
-
-                    <div>
-
-                        <Typography><Second/></Typography>
-
-                    </div>
-                </div>
-                )
-            </div>
         </div>
     ) : (
         <>
@@ -299,21 +294,16 @@ export default function CustomizedSteppers() {
                     </Button>
                 </>
             ) : (
-                <div>
+                <>
 
-                    <div>
+                    {getStepContent(activeStep)}
 
-                        <Typography className={classes.instructions}>
+                    <Button variant="contained" disabled={activeStep === 0} onClick={handleBack}
+                            className={classes.bbutton}>
+                        주문자<br/>미주문자<br/> 페이지
+                    </Button>
 
-                            {getStepContent(activeStep)}</Typography>
-
-                        <Button variant="contained" disabled={activeStep === 0} onClick={handleBack}
-                                className={classes.button}>
-                            주문자<br/>미주문자<br/> 페이지
-                        </Button>
-
-                    </div>
-                </div>
+                </>
             )}
         </>
     );

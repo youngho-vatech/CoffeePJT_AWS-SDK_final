@@ -19,7 +19,7 @@ function DeleteButton(userid) {
     return (
         <>
 
-            <form action="#">
+
 
                 <Button variant="contained" type='submit'
                         onClick={DeleteOrder(userid)}
@@ -28,7 +28,6 @@ function DeleteButton(userid) {
                     주문 취소
                 </Button>
 
-            </form>
 
         </>
     );

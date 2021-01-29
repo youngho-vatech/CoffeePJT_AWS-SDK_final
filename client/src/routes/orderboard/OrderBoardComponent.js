@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Column, Row} from 'simple-flexbox';
+import {Column} from 'simple-flexbox';
 import {createUseStyles} from 'react-jss';
 import OrderBoard from './OrderBoard';
 import {useQuery} from "@apollo/react-hooks";
@@ -11,12 +11,8 @@ const useStyles = createUseStyles((theme) => ({
     },
     background: {
         backgroundColor: 'rgba(246,244,244,0.9)',
-        padding: "45px 45px 45px 45px"
-    },
-    cardRow: {
-        '@media (max-width: 768px)': {
-            // marginTop: 0
-        }
+        padding: "45px 45px 45px 45px",
+        marginTop: "20px"
     },
     miniCardContainer: {
         flexGrow: 1,
@@ -29,9 +25,6 @@ const useStyles = createUseStyles((theme) => ({
     todayTrends: {
         marginTop: 30
     },
-    // lastRow: {
-    //     marginTop: 30,
-    // },
     unresolvedTickets: {
         marginRight: 30,
         '@media (max-width: 1024px)': {
@@ -50,8 +43,13 @@ const useStyles = createUseStyles((theme) => ({
         fontSize: '15px !important',
         fontFamily: "Do Hyeon",
         fontWeight: "600",
+        textAlign: "center",
         border: `5px solid ${theme.color.darkRed}`,
         borderRadius: 5,
+        color: theme.color.veryDarkGrayishBlue,
+        width: "100%",
+        padding: "10px 10px 10px 10px",
+        marginBottom: "20px"
     },
     itemTitle: {
         color: theme.color.veryDarkGrayishBlue,
@@ -62,39 +60,33 @@ const useStyles = createUseStyles((theme) => ({
 
 function OrderBoardComponent() {
     const classes = useStyles();
-    const [contents, setContents] = useState('');
+    const [contents, setContents] = useState("");
 
     const {data} = useQuery(TaskQuery);
     useEffect(() => {
         if (data) {
             setContents(data.tasks);
-
         }
     }, [data]);
 
 
     return (
+
         <Column className={classes.background}>
 
-            <Row
-                horizontal='space-between'
-                breakpoints={{1024: 'column'}}
-            >
-                <table className={classes.border}>
 
-                    {contents && contents.map((content) => (
-                        <td><span className={classes.itemTitle}>👏  오늘은 {content.creater}님이 {content.title} 기념으로 커피 삽니다! 👏</span>
-                        </td>))}
-                </table>
+            {contents && contents.map((content) => (
+                <span role="img" aria-label="clap" className={classes.border}
+                      key={content}>👏  오늘은 {content.creater}님이 {content.title} 기념으로 커피 쏩니다! 👏</span>
+            ))}
 
-            </Row>
 
-            <div className={classes.todayTrends}>
-                <OrderBoard/>
-            </div>
+            <OrderBoard/>
 
 
         </Column>
+
+
     );
 }
 

@@ -7,11 +7,8 @@ function DeleteButton(id) {
 
     return (
         <>
-
-            <form action="#">
-                <Button
-                    onClick={SearchDelete(id)}>🗑</Button>
-            </form>
+            <Button
+                onClick={SearchDelete(id)}>🗑</Button>
 
         </>
     );

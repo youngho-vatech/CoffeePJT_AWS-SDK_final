@@ -1,12 +1,9 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useContext} from 'react';
 import {string} from 'prop-types';
-import {useHistory} from 'react-router-dom';
 import {Row} from 'simple-flexbox';
 import {createUseStyles, useTheme} from 'react-jss';
 import {SidebarContext} from 'resources/hooks/useSidebar';
 import LINKS from 'resources/links';
-import {useQuery} from "@apollo/react-hooks";
-import {MeQuery} from "../../graphql/query";
 
 const useStyles = createUseStyles((theme) => ({
     avatar: {
@@ -63,20 +60,9 @@ const useStyles = createUseStyles((theme) => ({
 
 function HeaderComponent() {
 
-
-    const {push} = useHistory();
     const {currentItem} = useContext(SidebarContext);
     const theme = useTheme();
     const classes = useStyles({theme});
-    const [username, setName] = useState();
-
-    const {data} = useQuery(MeQuery);
-
-    useEffect(() => {
-        if (data) {
-            setName(data.me.username);
-        }
-    }, [data]);
 
 
     let title;

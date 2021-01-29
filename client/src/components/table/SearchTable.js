@@ -52,15 +52,13 @@ export default function SearchTable(search) {
                 <tbody>
 
                 {result &&
-                result.map((content) => (
+                result.map((content, index) => (
 
 
-                    <tr style={{marginBottom: 20}}>
+                    <tr key={index} style={{marginBottom: 20}}>
                         <td>{content.username}</td>
                         <td><UpdateUserDialog id={content._id} username={content.username}/></td>
                         <td><DeleteUserDialog id={content._id} username={content.username}/></td>
-
-
                     </tr>
 
 

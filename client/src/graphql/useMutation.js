@@ -1,4 +1,4 @@
-import {useMutation, useQuery} from "@apollo/react-hooks";
+import {useMutation} from "@apollo/react-hooks";
 import {
     BackUserMutation, CreateMutation,
     CreateUserMutation,
@@ -14,12 +14,11 @@ import {
     MeQuery, NotQuery,
     Ordermen,
     OrderSearch,
-    Receipt, SearchQuery,
+    Receipt,
     TaskQuery,
     UserSearchQuery,
     VacationQuery
 } from "./query";
-import React, {useEffect, useState} from "react";
 
 //주문 포기=> 재주문 상태로
 export function ChangeGiveup(userid) {
@@ -114,7 +113,7 @@ export function Giveup(userid) {
 
 //주문 생성
 
-export function TaskCreate(title) {
+export function TaskCreate(å) {
     const [create] = useMutation(TaskCreateMutation, {
             refetchQueries: [{query: TaskQuery}],
             variables: {
@@ -239,7 +238,6 @@ export function MultipleUserDelete(checked) {
                 {query: MeQuery, variables: {userid: localStorage.getItem('myData')}},
                 {query: Receipt}, {query: CountQuery}, {query: CostQuery}, {query: CountQuery}, {query: NotQuery}, {query: AllUserQuery}],
             awaitRefetchQueries: true,
-
             variables: {ids: checked.map((c) => (c._id))},
             onCompleted: () => {
                 alert("선택하신 유저가 삭제되었습니다.");
@@ -260,13 +258,11 @@ export function UpdateUser(checked, content, setOpen) {
                 {query: MeQuery, variables: {userid: localStorage.getItem('myData')}},
                 {query: Receipt}, {query: CostQuery}, {query: CountQuery}, {query: NotQuery}],
             awaitRefetchQueries: true,
-
             variables: {
                 id: checked.map((c) => (c._id)).toString(),
                 username: content
             },
             onCompleted: () => {
-
                 alert("정보 수정이 완료되었습니다.")
                 setOpen(false);
             },
@@ -330,7 +326,7 @@ export function DUpdateUser(username, content, setOpen) {
     return update
 }
 
-export function DSelectUser(username, content, setOpen) {
+export function DSelectUser(username, setOpen) {
     const [update] = useMutation(multipleDelete, {
             refetchQueries: [{query: UserSearchQuery},
                 {query: MeQuery, variables: {userid: localStorage.getItem('myData')}}],

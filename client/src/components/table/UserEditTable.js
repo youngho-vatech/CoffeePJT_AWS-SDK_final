@@ -15,7 +15,6 @@ import UserDeleteButton from "../button/UserDeleteButton";
 import UserAddButton from "../button/UserAddButton";
 import {MultipleUserDelete} from "../../graphql/useMutation";
 
-
 const useStyles = makeStyles((theme) => ({
     root: {
         margin: 'auto',
@@ -39,17 +38,11 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-function not(a, b) {
-    return a.filter((value) => b.indexOf(value) === -1);
-}
 
 function intersection(a, b) {
     return a.filter((value) => b.indexOf(value) !== -1);
 }
 
-function union(a, b) {
-    return [...a, ...not(b, a)];
-}
 
 export default function UserEditTable() {
     const classes = useStyles();
@@ -98,9 +91,10 @@ export default function UserEditTable() {
                         const labelId = `transfer-list-all-item-${value}-label`;
 
                         return (
-                            <tr style={{marginBottom: 20}}>
-                                <td>
-                                    <ListItem key={value} role="listitem" button onClick={handleToggle(value)}>
+
+                            <tr style={{marginBottom: 20}} key={value.username}>
+                                <th>
+                                    <ListItem role="listitem" button onClick={handleToggle(value)}>
 
                                         <ListItemIcon>
                                             <Checkbox
@@ -114,10 +108,11 @@ export default function UserEditTable() {
                                         <ListItemText id={labelId} primary={value.username}/>
 
                                     </ListItem>
-                                </td>
-                                <td><UpdateUserDialog username={value.username} id={value._id}/></td>
-                                <td><UserDeleteButton post_id={value._id}/></td>
+                                </th>
+                                <th><UpdateUserDialog username={value.username} id={value._id}/></th>
+                                <th><UserDeleteButton post_id={value._id}/></th>
                             </tr>
+
                         );
                     })}
                     </tbody>
@@ -130,12 +125,11 @@ export default function UserEditTable() {
 
     return (
         <Grid container spacing={2} justify="center" alignItems="center" className={classes.root}>
-            <table className={classes.border}>
-                <th>
-                    <td className={classes.addbutton}>
+
+                    <span className={classes.addbutton}>
                         <UserAddButton/>
-                    </td>
-                    <td>
+                    </span>
+            <span>
                         <Button
                             variant="outlined"
                             onClick={MultipleUserDelete(checked)}
@@ -145,10 +139,8 @@ export default function UserEditTable() {
                         >
                             선택 삭제
                         </Button>
-                    </td>
+                    </span>
 
-                </th>
-            </table>
 
             <Grid item>{customList('주문자', list)}</Grid>
 

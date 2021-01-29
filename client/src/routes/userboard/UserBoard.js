@@ -1,9 +1,7 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {Row} from 'simple-flexbox';
 import {createUseStyles, useTheme} from 'react-jss';
 import CardComponent from 'components/cards/CardComponent';
-import {useQuery} from "@apollo/react-hooks";
-import {AllUserQuery, MeQuery, OrderSearch, SearchQuery, TaskQuery} from "../../graphql/query";
 import UserEditTable from "../../components/table/UserEditTable";
 import SearchTable from "../../components/table/SearchTable";
 
@@ -62,37 +60,7 @@ const useStyles = createUseStyles((theme) => ({
 function Create(props) {
     const theme = useTheme();
     const classes = useStyles({theme});
-    const [contents, setContents] = useState();
-    const [result, setResult] = useState();
-    const [search, setSearch] = useState(undefined);
-
-    const {data} = useQuery(TaskQuery);
-
-    const {data: se} = useQuery(SearchQuery, {
-        variables: {
-            word: search
-        },
-        refetchQueries: [{query: OrderSearch, variables: {id: localStorage.getItem('myData')}}
-            , {query: MeQuery, variables: {userid: localStorage.getItem('myData')}}, {
-                query: SearchQuery, variables: {
-                    word: search
-                }
-            }],
-
-        awaitRefetchQueries: true,
-
-
-    });
-
-    useEffect(() => {
-        if (data) {
-            setContents(data.tasks);
-        }
-        if (se) {
-            setResult(se.user);
-
-        }
-    });
+    const [search, setSearch] = useState('');
 
     return (
         <CardComponent
