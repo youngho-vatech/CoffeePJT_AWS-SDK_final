@@ -9,7 +9,7 @@ import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 
 const useStyles = createUseStyles((theme) => ({
-        
+
         loginwrap: {
             color: "white",
             fontWeight: "lighter",
@@ -133,7 +133,9 @@ const AuthenticationForm = () => {
 
     const [result, setResult] = useState([]);
     const [inputValue, setInputValue] = useState("");
+    const [value, setValue] = useState('');
     const [tasks, setTasks] = useState("");
+    const [o, setO] = useState("");
 
     const {data: task} = useQuery(TaskQuery);
 
@@ -144,20 +146,24 @@ const AuthenticationForm = () => {
 
     });
 
+    const {data: one} = useQuery(SearchQuery, {
+        variables: {
+            word: value
+        }
+    })
+
     useEffect(() => {
         if (data) {
             setResult(data.user);
-
         }
-    }, [data]);
-
-    useEffect(() => {
         if (task) {
             setTasks(task.tasks);
-
         }
-    }, [task]);
-
+        if (one) {
+            setO(one.user);
+        }
+    }, [data, task, one]);
+    
     return localStorage.getItem('name') ? (
         <div className={classes.root}>
             <div className={classes.loginwrap}>
@@ -177,6 +183,10 @@ const AuthenticationForm = () => {
                                     freeSolo
                                     id="free-solo-2-demo"
                                     disableClearable
+                                    value={value}
+                                    onChange={(event, newValue) => {
+                                        setValue(newValue);
+                                    }}
                                     options={result.map((content) => content.username)}
                                     inputValue={inputValue}
                                     onInputChange={(event, newInputValue) => {
@@ -194,8 +204,8 @@ const AuthenticationForm = () => {
                                                 className: classes.focused
                                             }}
                                             onKeyDown={({key}) => {
-                                                if (key === "Enter") {
-                                                    handleClick(inputValue, result.map((content) => (content._id)))
+                                                if (key === "Enter" && value !== undefined && value !== '') {
+                                                    handleClick(value, o.map((content) => (content._id)))
                                                 }
                                             }}
                                         />
@@ -205,7 +215,7 @@ const AuthenticationForm = () => {
 
                             <Button type="submit"
                                     disabled={inputValue === undefined}
-                                    onClick={() => handleClick(inputValue, result.map((content) => (content._id)))}
+                                    onClick={() => handleClick(value, o.map((content) => (content._id)))}
                             >로그인</Button>
 
                         </div>
@@ -237,6 +247,10 @@ const AuthenticationForm = () => {
                                     freeSolo
                                     id="free-solo-2-demo"
                                     disableClearable
+                                    value={value}
+                                    onChange={(event, newValue) => {
+                                        setValue(newValue);
+                                    }}
                                     options={result.map((content) => content.username)}
                                     inputValue={inputValue}
                                     onInputChange={(event, newInputValue) => {
@@ -249,8 +263,8 @@ const AuthenticationForm = () => {
                                             margin="normal"
                                             color={"secondary"}
                                             onKeyDown={({key}) => {
-                                                if (key === "Enter") {
-                                                    handleClick(inputValue, result.map((content) => (content._id)))
+                                                if (key === "Enter" && value !== undefined && value !== '') {
+                                                    handleClick(value, o.map((content) => (content._id)))
                                                 }
                                             }}
                                             InputProps={{
@@ -265,7 +279,7 @@ const AuthenticationForm = () => {
 
                             <Button type="submit"
                                     disabled={inputValue === undefined}
-                                    onClick={() => handleClick(inputValue, result.map((content) => (content._id)))}
+                                    onClick={() => handleClick(value, o.map((content) => content._id))}
                             >로그인</Button>
 
                         </div>

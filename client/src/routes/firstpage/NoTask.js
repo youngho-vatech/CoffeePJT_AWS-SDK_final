@@ -170,7 +170,9 @@ const AuthenticationForm = () => {
 
     const [search, setSearch] = useState("");
     const [result, setResult] = useState([]);
+    const [o, setO] = useState("");
     const [inputValue, setInputValue] = useState("");
+    const [value, setValue] = useState('');
 
     const {data} = useQuery(SearchQuery, {
         variables: {
@@ -178,13 +180,21 @@ const AuthenticationForm = () => {
         },
 
     });
+    const {data: one} = useQuery(SearchQuery, {
+        variables: {
+            word: value
+        }
+    })
+
 
     useEffect(() => {
         if (data) {
             setResult(data.user);
-
         }
-    }, [data]);
+        if (one) {
+            setO(one.user);
+        }
+    }, [data, one]);
 
 
     return localStorage.getItem('name') ? (
@@ -208,6 +218,10 @@ const AuthenticationForm = () => {
                                     id="free-solo-2-demo"
                                     disableClearable
                                     options={result.map((content) => content.username)}
+                                    value={value}
+                                    onChange={(event, newValue) => {
+                                        setValue(newValue);
+                                    }}
                                     inputValue={inputValue}
                                     onInputChange={(event, newInputValue) => {
                                         setInputValue(newInputValue);
@@ -220,8 +234,8 @@ const AuthenticationForm = () => {
                                             color={"secondary"}
                                             onChange={e => setSearch(e.target.value)}
                                             onKeyDown={({key}) => {
-                                                if (key === "Enter") {
-                                                    handleClick(inputValue, result.map((content) => (content._id)))
+                                                if (key === "Enter" && value !== undefined && value !== '') {
+                                                    handleClick(value, o.map((content) => (content._id)))
                                                 }
                                             }}
                                             InputProps={{
@@ -236,7 +250,7 @@ const AuthenticationForm = () => {
 
                             <Button type="submit"
                                     disabled={inputValue === undefined}
-                                    onClick={() => handleClick(inputValue, result.map((content) => (content._id)))}
+                                    onClick={() => handleClick(value, o.map((content) => (content._id)))}
                             >로그인</Button>
 
                         </div>
@@ -268,6 +282,10 @@ const AuthenticationForm = () => {
                                     id="free-solo-2-demo"
                                     disableClearable
                                     options={result.map((content) => content.username)}
+                                    value={value}
+                                    onChange={(event, newValue) => {
+                                        setValue(newValue);
+                                    }}
                                     inputValue={inputValue}
                                     onInputChange={(event, newInputValue) => {
                                         setInputValue(newInputValue);
@@ -278,18 +296,10 @@ const AuthenticationForm = () => {
                                             margin="normal"
                                             color={"secondary"}
                                             onChange={e => setSearch(e.target.value)}
-                                            onKeyPress={(ev) => {
-                                                const listener = event => {
-                                                    if (event.code === "Enter") {
-                                                        handleClick(inputValue, result.map((content) => (content._id)))
-
-                                                    }
-                                                };
-                                                document.addEventListener("keypress", listener);
-                                                return () => {
-                                                    document.removeEventListener("keypress", listener);
-                                                };
-
+                                            onKeyDown={({key}) => {
+                                                if (key === "Enter" && value !== undefined && value !== '') {
+                                                    handleClick(value, o.map((content) => (content._id)))
+                                                }
                                             }}
                                             InputProps={{
                                                 ...params.InputProps,
@@ -316,7 +326,6 @@ const AuthenticationForm = () => {
     )
 
 };
-
 
 
 export default AuthenticationForm;
