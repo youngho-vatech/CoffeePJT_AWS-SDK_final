@@ -10,6 +10,7 @@ module.exports = async (cmenu) => {
         // const orders0 = await Order.query("dummy").eq("주문").where("menu").eq("아메리카노").and().where("hi").eq("hot").exec()
         const orders0 = await dynamoDb.query({ 
             TableName: process.env.ORDER_TABLE,
+            IndexName:"username_index",
             KeyConditionExpression:"dummy = :dummy",
             FilterExpression: "menu = :menu and hi = :hi",
             ExpressionAttributeValues: {

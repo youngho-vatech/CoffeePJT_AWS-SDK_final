@@ -700,7 +700,8 @@ const dynamoDb = new AWS.DynamoDB.DocumentClient();
 
 module.exports = async () => {
   const result = await dynamoDb.scan({
-    TableName: process.env.USER_TABLE
+    TableName: process.env.USER_TABLE,
+    IndexName: "username_index"
   }).promise().then(r => r.Items);
   console.log("allusers");
   return result;
@@ -883,6 +884,7 @@ const dynamoDb = new AWS.DynamoDB.DocumentClient();
 module.exports = async () => {
   const result = await dynamoDb.query({
     TableName: process.env.USER_TABLE,
+    IndexName: "username_index",
     KeyConditionExpression: "dummy = :dummy",
     FilterExpression: "#status = :status and #position <> :position",
     ExpressionAttributeNames: {
@@ -893,7 +895,8 @@ module.exports = async () => {
       ":dummy": "유저",
       ":status": "대기중",
       ":position": "휴가자"
-    }
+    },
+    ScanIndexForward: true
   }).promise().then(r => r.Items);
   console.log(result);
   return result;
@@ -916,6 +919,7 @@ const dynamoDb = new AWS.DynamoDB.DocumentClient();
 module.exports = async () => {
   const result = await dynamoDb.query({
     TableName: process.env.USER_TABLE,
+    IndexName: "username_index",
     KeyConditionExpression: "dummy = :dummy",
     FilterExpression: "#position = :position",
     ExpressionAttributeNames: {
@@ -947,6 +951,7 @@ const dynamoDb = new AWS.DynamoDB.DocumentClient();
 module.exports = async () => {
   const result = dynamoDb.query({
     TableName: process.env.USER_TABLE,
+    IndexName: "username_index",
     KeyConditionExpression: "dummy = :dummy",
     FilterExpression: "#position = :position",
     ExpressionAttributeNames: {
@@ -1011,6 +1016,7 @@ module.exports = async cmenu => {
     // const orders0 = await Order.query("dummy").eq("주문").where("menu").eq("아메리카노").and().where("hi").eq("hot").exec()
     const orders0 = await dynamoDb.query({
       TableName: process.env.ORDER_TABLE,
+      IndexName: "username_index",
       KeyConditionExpression: "dummy = :dummy",
       FilterExpression: "menu = :menu and hi = :hi",
       ExpressionAttributeValues: {
